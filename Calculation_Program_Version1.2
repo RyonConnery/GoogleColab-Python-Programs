@@ -1,0 +1,265 @@
+"""
+Author: Ryon Connery
+Date: September 1, 2026
+
+Program: Functional Purchase Calculation Program
+
+Purpose:
+This program calculates the gross purchase amount, discount, tax,
+shipping cost, and final amount paid. The program demonstrates the
+use of user-defined Python functions by dividing the calculation
+process into smaller, specialized tasks.
+
+Program Flow:
+1. Display a brief explanation of the program.
+2. Prompt for and validate unit price and quantity.
+3. Calculate the gross sale.
+4. Apply a 5 percent discount when the gross sale is $100 or more;
+   otherwise, apply a 3 percent discount.
+5. Calculate the amount after discount.
+6. Calculate 6 percent tax on the amount after discount.
+7. Calculate 2 percent shipping on the amount after discount.
+8. Calculate the final amount paid.
+9. Display all results using professional currency formatting.
+
+Variables:
+unit_price            - Price of one item entered by the user.
+quantity              - Number of items purchased.
+gross_sale            - Unit price multiplied by quantity.
+discount_rate         - Discount percentage selected by the program.
+discount_amount       - Dollar amount of the applicable discount.
+total_after_discount  - Gross sale minus the discount.
+tax_amount            - Six percent tax on the amount after discount.
+shipping_cost         - Two percent shipping cost.
+total_amount_paid     - Final amount after discount, tax, and shipping.
+"""
+
+# Program constants
+LOW_DISCOUNT_RATE = 0.03
+HIGH_DISCOUNT_RATE = 0.05
+DISCOUNT_THRESHOLD = 100.00
+TAX_RATE = 0.06
+SHIPPING_RATE = 0.02
+
+
+def enter_data():
+    """
+    Prompt the user for unit price and quantity.
+
+    Input validation ensures that unit price is a positive numeric
+    value and quantity is a positive whole number.
+
+    Returns:
+        tuple: The validated unit price and quantity purchased.
+    """
+
+    while True:
+        try:
+            unit_price = float(input("Enter the price per item: $"))
+
+            if unit_price <= 0:
+                print("Error: Unit price must be greater than $0.00.")
+            else:
+                break
+
+        except ValueError:
+            print("Error: Enter a valid numeric unit price.")
+
+    while True:
+        try:
+            quantity = int(input("Enter the quantity purchased: "))
+
+            if quantity <= 0:
+                print("Error: Quantity must be a positive whole number.")
+            else:
+                break
+
+        except ValueError:
+            print("Error: Enter a valid whole-number quantity.")
+
+    return unit_price, quantity
+
+
+def calc_gross_sale(unit_price, quantity):
+    """
+    Calculate the gross sale before discounts.
+
+    Args:
+        unit_price (float): Price of one item.
+        quantity (int): Number of items purchased.
+
+    Returns:
+        float: Gross purchase amount.
+    """
+
+    return unit_price * quantity
+
+
+def calc_discount(gross_sale):
+    """
+    Determine and calculate the applicable discount.
+
+    Purchases of $100.00 or more receive a 5 percent discount.
+    Purchases below $100.00 receive a 3 percent discount.
+
+    Args:
+        gross_sale (float): Gross purchase amount.
+
+    Returns:
+        tuple: Discount amount and discount rate.
+    """
+
+    if gross_sale >= DISCOUNT_THRESHOLD:
+        discount_rate = HIGH_DISCOUNT_RATE
+    else:
+        discount_rate = LOW_DISCOUNT_RATE
+
+    discount_amount = gross_sale * discount_rate
+
+    return discount_amount, discount_rate
+
+
+def calc_tax(total_after_discount):
+    """
+    Calculate 6 percent tax on the purchase amount after discount.
+
+    Args:
+        total_after_discount (float): Purchase amount after discount.
+
+    Returns:
+        float: Tax amount.
+    """
+
+    return total_after_discount * TAX_RATE
+
+
+def calc_shipping_cost(total_after_discount):
+    """
+    Calculate 2 percent shipping on the purchase amount after discount.
+
+    Args:
+        total_after_discount (float): Purchase amount after discount.
+
+    Returns:
+        float: Shipping cost.
+    """
+
+    return total_after_discount * SHIPPING_RATE
+
+
+def calc_total_cost(
+    gross_sale,
+    discount_amount,
+    tax_amount,
+    shipping_cost
+):
+    """
+    Calculate the discounted purchase amount and final amount paid.
+
+    Args:
+        gross_sale (float): Original purchase amount.
+        discount_amount (float): Applicable discount amount.
+        tax_amount (float): Calculated tax.
+        shipping_cost (float): Calculated shipping.
+
+    Returns:
+        tuple: Total after discount and final amount paid.
+    """
+
+    total_after_discount = gross_sale - discount_amount
+
+    total_amount_paid = (
+        total_after_discount
+        + tax_amount
+        + shipping_cost
+    )
+
+    return total_after_discount, total_amount_paid
+
+
+def print_results(
+    gross_sale,
+    discount_rate,
+    discount_amount,
+    total_after_discount,
+    tax_amount,
+    shipping_cost,
+    total_amount_paid
+):
+    """
+    Display the completed purchase calculation using professional
+    currency formatting.
+    """
+
+    print()
+    print("Purchase Summary")
+    print("--------------------------------")
+    print(f"Original Price:       ${gross_sale:.2f}")
+    print(f"Discount Rate:         {discount_rate * 100:.0f}%")
+    print(f"Discount Amount:      ${discount_amount:.2f}")
+    print(f"Total After Discount: ${total_after_discount:.2f}")
+    print(f"Tax Amount:           ${tax_amount:.2f}")
+    print(f"Shipping Cost:        ${shipping_cost:.2f}")
+    print(f"Total Amount Paid:    ${total_amount_paid:.2f}")
+    print("--------------------------------")
+    print("Thank you for using the program, Ryon Connery.")
+
+
+def main():
+    """Control the overall execution of the program."""
+
+    print("Functional Purchase Calculation Program")
+    print(
+        "This program calculates the purchase discount, tax, "
+        "shipping cost, and final amount paid using Python functions."
+    )
+    print("Programmed by Ryon Connery")
+    print()
+
+    # Obtain validated user input.
+    unit_price, quantity = enter_data()
+
+    # Calculate the gross purchase amount.
+    gross_sale = calc_gross_sale(
+        unit_price,
+        quantity
+    )
+
+    # Determine the appropriate discount.
+    discount_amount, discount_rate = calc_discount(
+        gross_sale
+    )
+
+    # Calculate the amount remaining after the discount.
+    total_after_discount = gross_sale - discount_amount
+
+    # Calculate tax and shipping from the discounted amount.
+    tax_amount = calc_tax(
+        total_after_discount
+    )
+
+    shipping_cost = calc_shipping_cost(
+        total_after_discount
+    )
+
+    # Calculate the final purchase total.
+    total_after_discount, total_amount_paid = calc_total_cost(
+        gross_sale,
+        discount_amount,
+        tax_amount,
+        shipping_cost
+    )
+
+    # Display the completed purchase summary.
+    print_results(
+        gross_sale,
+        discount_rate,
+        discount_amount,
+        total_after_discount,
+        tax_amount,
+        shipping_cost,
+        total_amount_paid
+    )
+
+
+main()
